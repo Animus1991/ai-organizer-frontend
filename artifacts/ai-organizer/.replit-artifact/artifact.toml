@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "AI Organizer"
+version = "1.0.0"
+id = "artifacts/ai-organizer"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+localPort = 18504
+name = "web"
+paths = ["/"]
+
+[services.development]
+run = "pnpm --filter @workspace/ai-organizer run dev"
+
+[services.env]
+PORT = "18504"
+BASE_PATH = "/"
+
+[services.production]
+build = ["pnpm", "--filter", "@workspace/ai-organizer", "run", "build"]
+publicDir = "artifacts/ai-organizer/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"

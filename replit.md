@@ -48,6 +48,20 @@ Every package extends `tsconfig.base.json` which sets `composite: true`. The roo
 - `pnpm run build` — runs `typecheck` first, then recursively runs `build` in all packages that define it
 - `pnpm run typecheck` — runs `tsc --build --emitDeclarationOnly` using project references
 
+## Artifacts
+
+### `artifacts/ai-organizer` (`@workspace/ai-organizer`)
+
+React + Vite frontend app — AI Organizer. Ported from https://github.com/Animus1991/ai-organizer-frontend.git.
+
+- Entry: `src/main.tsx`
+- App: `src/App.tsx` — uses `wouter` for routing, wraps with QueryClientProvider + TooltipProvider
+- Pages: `src/pages/Home.tsx` (dashboard), `src/pages/not-found.tsx`
+- Styles: `src/index.css` — Tailwind v4 with full HSL design token theme (light + dark)
+- Stack: React, Vite, Tailwind CSS v4, shadcn/ui, Lucide icons, wouter, TanStack Query
+- Preview path: `/`
+- Port: assigned dynamically via `PORT` env var
+
 ## Packages
 
 ### `artifacts/api-server` (`@workspace/api-server`)
