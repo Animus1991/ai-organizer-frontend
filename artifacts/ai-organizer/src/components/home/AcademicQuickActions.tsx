@@ -1,20 +1,21 @@
 // Academic Quick Actions for AI_ORGANIZER Home.tsx
+// v2: Clear visual hierarchy — 3 primary hero cards + compact secondary pills
 // Uses semantic HSL tokens for theme consistency
-// Mobile: compact icon-only grid. Desktop: full cards with descriptions.
 
 import React, { useMemo, useState } from 'react';
-import { 
-  Upload, 
-  Search, 
-  Brain, 
-  BarChart3, 
-  FilePlus, 
-  Users2, 
+import {
+  Upload,
+  Search,
+  Brain,
+  BarChart3,
+  FilePlus,
+  Users2,
   TrendingUp,
   Database,
   MessageSquare,
   ChevronDown,
   ChevronUp,
+  ArrowRight,
 } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
 import { useTheme } from '../../context/ThemeContext';
@@ -34,17 +35,23 @@ interface AcademicQuickActionsProps {
   isCompact: boolean;
 }
 
-interface QuickActionConfig {
+interface PrimaryAction {
   key: string;
-  Icon: React.FC<{ className?: string; style?: React.CSSProperties }>;
-  labelKey: string;
-  subKey: string;
-  tokenColor: string;
+  Icon: React.FC<{ style?: React.CSSProperties }>;
+  label: string;
+  description: string;
+  colorVar: string;
+  gradientAngle?: number;
   action?: () => void;
-  primary?: boolean;
 }
 
-const MAX_VISIBLE = 6;
+interface SecondaryAction {
+  key: string;
+  Icon: React.FC<{ style?: React.CSSProperties }>;
+  label: string;
+  colorVar: string;
+  action?: () => void;
+}
 
 export const AcademicQuickActions: React.FC<AcademicQuickActionsProps> = ({
   canSegment,
@@ -62,190 +69,289 @@ export const AcademicQuickActions: React.FC<AcademicQuickActionsProps> = ({
   const { t } = useLanguage();
   const { isDark } = useTheme();
   const isMobile = useIsMobile();
-  const [showAll, setShowAll] = useState(false);
+  const [showSecondary, setShowSecondary] = useState(false);
+  const [hoveredKey, setHoveredKey] = useState<string | null>(null);
 
-  const quickActions: QuickActionConfig[] = useMemo(() => {
-    const items: QuickActionConfig[] = [
-      { key: "upload", Icon: Upload, labelKey: "home.quickActions.upload", subKey: "home.quickActions.uploadDesc", tokenColor: "var(--warning)", action: onUpload, primary: true },
-      { key: "search", Icon: Search, labelKey: "home.quickActions.search", subKey: "home.quickActions.searchDesc", tokenColor: "var(--info)", action: onSearch, primary: true },
-      { key: "ai", Icon: Brain, labelKey: "home.quickActions.ai", subKey: "home.quickActions.aiDesc", tokenColor: "var(--accent)", action: onAI, primary: true },
-      { key: "analytics", Icon: BarChart3, labelKey: "home.quickActions.analytics", subKey: "home.quickActions.analyticsDesc", tokenColor: "var(--success)", action: onAnalytics, primary: true },
-      { key: "import", Icon: MessageSquare, labelKey: "home.quickActions.import", subKey: "home.quickActions.importDesc", tokenColor: "var(--info)", action: onImportChats, primary: true },
-      { key: "browse", Icon: Users2, labelKey: "home.quickActions.browse", subKey: "home.quickActions.browseDesc", tokenColor: "var(--success)", action: onBrowseConversations, primary: true },
+  const primaryActions: PrimaryAction[] = useMemo(() => {
+    const base: PrimaryAction[] = [
+      {
+        key: "upload",
+        Icon: Upload,
+        label: t("home.quickActions.upload") || "Upload Document",
+        description: t("home.quickActions.uploadDesc") || "Add research papers, reports, and documents to your knowledge base",
+        colorVar: "--warning",
+        gradientAngle: 135,
+        action: onUpload,
+      },
+      {
+        key: "search",
+        Icon: Search,
+        label: t("home.quickActions.search") || "Semantic Search",
+        description: t("home.quickActions.searchDesc") || "Query across all documents with natural language and AI-powered retrieval",
+        colorVar: "--primary",
+        gradientAngle: 145,
+        action: onSearch,
+      },
+      {
+        key: "ai",
+        Icon: Brain,
+        label: t("home.quickActions.ai") || "AI Assistant",
+        description: t("home.quickActions.aiDesc") || "Chat with your documents, generate summaries, and extract key insights",
+        colorVar: "--accent",
+        gradientAngle: 125,
+        action: onAI,
+      },
     ];
-
-    // Secondary actions (hidden behind "More")
-    items.push(
-      { key: "submit", Icon: FilePlus, labelKey: "home.quickActions.submit", subKey: "home.quickActions.submitDesc", tokenColor: "var(--warning)", action: onSubmit },
-      { key: "collaborate", Icon: Users2, labelKey: "home.quickActions.collaborate", subKey: "home.quickActions.collaborateDesc", tokenColor: "var(--primary)", action: onCollaborate },
-      { key: "benchmark", Icon: TrendingUp, labelKey: "home.quickActions.benchmark", subKey: "home.quickActions.benchmarkDesc", tokenColor: "var(--warning)" },
-    );
-
     if (canSegment) {
-      // Insert segment as primary when available
-      items.splice(3, 0, { key: "segment", Icon: Database, labelKey: "home.quickActions.segment", subKey: "home.quickActions.segmentDesc", tokenColor: "var(--destructive)", action: onSegment, primary: true });
+      base.splice(2, 0, {
+        key: "segment",
+        Icon: Database,
+        label: t("home.quickActions.segment") || "Segment Document",
+        description: t("home.quickActions.segmentDesc") || "Break your document into analysable semantic units",
+        colorVar: "--destructive",
+        gradientAngle: 140,
+        action: onSegment,
+      });
     }
+    return base;
+  }, [canSegment, onSegment, onUpload, onSearch, onAI, t]);
 
-    return items;
-  }, [canSegment, onSegment, onImportChats, onBrowseConversations, onUpload, onSearch, onAI, onAnalytics, onSubmit, onCollaborate]);
+  const secondaryActions: SecondaryAction[] = useMemo(() => [
+    { key: "analytics", Icon: BarChart3, label: t("home.quickActions.analytics") || "Analytics", colorVar: "--success", action: onAnalytics },
+    { key: "import",    Icon: MessageSquare, label: t("home.quickActions.import") || "Import Chats", colorVar: "--info", action: onImportChats },
+    { key: "browse",    Icon: Users2, label: t("home.quickActions.browse") || "Browse Conversations", colorVar: "--success", action: onBrowseConversations },
+    { key: "submit",    Icon: FilePlus, label: t("home.quickActions.submit") || "Submit Paper", colorVar: "--warning", action: onSubmit },
+    { key: "collaborate", Icon: Users2, label: t("home.quickActions.collaborate") || "Collaborate", colorVar: "--primary", action: onCollaborate },
+    { key: "benchmark", Icon: TrendingUp, label: t("home.quickActions.benchmark") || "Benchmark", colorVar: "--warning", action: undefined },
+  ], [onAnalytics, onImportChats, onBrowseConversations, onSubmit, onCollaborate, t]);
 
-  const visibleActions = showAll ? quickActions : quickActions.slice(0, MAX_VISIBLE);
-  const hasMore = quickActions.length > MAX_VISIBLE;
-
-  // ── Mobile: Compact icon grid ──
+  // ── Mobile layout ──
   if (isMobile) {
-    const mobileVisible = showAll ? quickActions : quickActions.slice(0, 8);
+    const allActions = [
+      ...primaryActions.map(a => ({ ...a, isPrimary: true })),
+      ...secondaryActions.map(a => ({ ...a, isPrimary: false })),
+    ];
+    const visible = showSecondary ? allActions : allActions.slice(0, 8);
     return (
       <div>
-        <div style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(4, 1fr)",
-          gap: "8px",
-        }}>
-          {mobileVisible.map((action) => {
-            const label = t(action.labelKey) || action.labelKey;
-            return (
-              <button
-                key={action.key}
-                onClick={action.action}
-                title={label}
-                aria-label={label}
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: "4px",
-                  padding: "10px 4px",
-                  borderRadius: "12px",
-                  border: `1px solid hsl(${action.tokenColor} / ${isDark ? 0.2 : 0.12})`,
-                  background: `hsl(${action.tokenColor} / ${isDark ? 0.08 : 0.04})`,
-                  cursor: action.action ? "pointer" : "default",
-                  transition: "all 0.15s ease",
-                }}
-              >
-                <div style={{
-                  width: 36,
-                  height: 36,
-                  borderRadius: 10,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  background: `hsl(${action.tokenColor} / ${isDark ? 0.18 : 0.1})`,
-                  color: `hsl(${action.tokenColor})`,
-                  border: `1px solid hsl(${action.tokenColor} / ${isDark ? 0.3 : 0.18})`,
-                }}>
-                  <action.Icon style={{ width: 18, height: 18 }} />
-                </div>
-                <span style={{
-                  fontSize: "10px",
-                  fontWeight: 600,
-                  color: "hsl(var(--foreground))",
-                  textAlign: "center",
-                  lineHeight: 1.2,
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  whiteSpace: "nowrap",
-                  maxWidth: "100%",
-                }}>
-                  {label}
-                </span>
-              </button>
-            );
-          })}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "8px" }}>
+          {visible.map((action) => (
+            <button
+              key={action.key}
+              onClick={action.action}
+              aria-label={action.label}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "4px",
+                padding: "10px 4px",
+                borderRadius: "12px",
+                border: `1px solid hsl(${action.colorVar} / ${isDark ? 0.22 : 0.15})`,
+                background: `hsl(${action.colorVar} / ${isDark ? 0.1 : 0.05})`,
+                cursor: action.action ? "pointer" : "default",
+                transition: "all 0.15s ease",
+              }}
+            >
+              <div style={{
+                width: 36, height: 36, borderRadius: 10,
+                display: "flex", alignItems: "center", justifyContent: "center",
+                background: `hsl(${action.colorVar} / ${isDark ? 0.2 : 0.12})`,
+                color: `hsl(${action.colorVar})`,
+                border: `1px solid hsl(${action.colorVar} / ${isDark ? 0.32 : 0.2})`,
+              }}>
+                <action.Icon style={{ width: 18, height: 18 }} />
+              </div>
+              <span style={{
+                fontSize: "10px", fontWeight: 600,
+                color: "hsl(var(--foreground))",
+                textAlign: "center", lineHeight: 1.2,
+                overflow: "hidden", textOverflow: "ellipsis",
+                whiteSpace: "nowrap", maxWidth: "100%",
+              }}>
+                {action.label}
+              </span>
+            </button>
+          ))}
         </div>
-        {hasMore && (
+        {allActions.length > 8 && (
           <button
-            onClick={() => setShowAll(prev => !prev)}
+            onClick={() => setShowSecondary(p => !p)}
             style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "4px",
-              margin: "8px auto 0",
-              padding: "6px 14px",
-              borderRadius: "999px",
-              border: "1px solid hsl(var(--border))",
-              background: "hsl(var(--muted))",
-              color: "hsl(var(--muted-foreground))",
-              fontSize: "11px",
-              fontWeight: 600,
-              cursor: "pointer",
+              display: "flex", alignItems: "center", gap: "4px",
+              margin: "8px auto 0", padding: "6px 14px",
+              borderRadius: "999px", border: "1px solid hsl(var(--border))",
+              background: "hsl(var(--muted))", color: "hsl(var(--muted-foreground))",
+              fontSize: "11px", fontWeight: 600, cursor: "pointer",
             }}
           >
-            {showAll ? <ChevronUp style={{ width: 12, height: 12 }} /> : <ChevronDown style={{ width: 12, height: 12 }} />}
-            {showAll
-              ? (t("home.quickActions.showLess") || "Εμφάνιση λιγότερων")
-              : `Εμφάνιση ${quickActions.length - 8} ακόμη`
-            }
+            {showSecondary ? <ChevronUp style={{ width: 12, height: 12 }} /> : <ChevronDown style={{ width: 12, height: 12 }} />}
+            {showSecondary ? (t("home.quickActions.showLess") || "Show less") : `+${allActions.length - 8} more`}
           </button>
         )}
       </div>
     );
   }
 
-  // ── Desktop: Full cards with descriptions ──
+  // ── Desktop layout ──
+  const colCount = Math.min(primaryActions.length, 3);
+
   return (
-    <div>
-      <div className="academic-quick-actions">
-        {visibleActions.map((action, index) => {
-          const label = t(action.labelKey) || action.labelKey;
-          const sub = t(action.subKey) || action.subKey;
+    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+      {/* ─── Tier 1: Primary Hero Cards ─── */}
+      <div style={{
+        display: "grid",
+        gridTemplateColumns: `repeat(${colCount}, 1fr)`,
+        gap: 12,
+      }}>
+        {primaryActions.map((action, index) => {
+          const isHovered = hoveredKey === action.key;
+          const angle = action.gradientAngle ?? 135;
           return (
-            <div
+            <button
               key={action.key}
-              className="academic-quick-action"
               onClick={action.action}
+              onMouseEnter={() => setHoveredKey(action.key)}
+              onMouseLeave={() => setHoveredKey(null)}
+              disabled={!action.action}
               style={{
-                animationDelay: `${index * 0.05}s`,
-                cursor: action.action ? 'pointer' : 'default',
-                fontSize: "0.99em",
-                paddingTop: "calc(var(--space-academic-md) * 0.99)",
-                paddingBottom: "calc(var(--space-academic-md) * 0.99)",
+                position: "relative",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-start",
+                gap: 10,
+                padding: "20px 20px 18px",
+                borderRadius: 16,
+                border: `1px solid hsl(${action.colorVar} / ${isDark ? (isHovered ? 0.45 : 0.25) : (isHovered ? 0.35 : 0.18)})`,
+                background: isHovered
+                  ? `linear-gradient(${angle}deg, hsl(${action.colorVar} / ${isDark ? 0.2 : 0.12}), hsl(${action.colorVar} / ${isDark ? 0.08 : 0.04}))`
+                  : `linear-gradient(${angle}deg, hsl(${action.colorVar} / ${isDark ? 0.12 : 0.06}), hsl(${action.colorVar} / ${isDark ? 0.04 : 0.015}))`,
+                boxShadow: isHovered
+                  ? `0 8px 24px hsl(${action.colorVar} / ${isDark ? 0.2 : 0.14}), 0 2px 8px hsl(${action.colorVar} / ${isDark ? 0.12 : 0.08})`
+                  : `0 2px 8px hsl(var(--background) / ${isDark ? 0.4 : 0.06})`,
+                cursor: action.action ? "pointer" : "not-allowed",
+                transition: "all 0.2s cubic-bezier(0.4,0,0.2,1)",
+                transform: isHovered ? "translateY(-2px) scale(1.005)" : "translateY(0) scale(1)",
+                textAlign: "left",
+                animationDelay: `${index * 0.06}s`,
+                minHeight: 130,
+                overflow: "hidden",
               }}
             >
-              <div 
-                className="academic-quick-action-icon"
-                style={{
-                  background: `hsl(${action.tokenColor} / ${isDark ? 0.15 : 0.08})`,
-                  color: `hsl(${action.tokenColor})`,
-                  border: `1px solid hsl(${action.tokenColor} / ${isDark ? 0.25 : 0.15})`,
-                }}
-              >
+              {/* Subtle top accent stripe */}
+              <div style={{
+                position: "absolute",
+                top: 0, left: 0, right: 0,
+                height: 3,
+                borderRadius: "16px 16px 0 0",
+                background: `linear-gradient(90deg, hsl(${action.colorVar}), hsl(${action.colorVar} / 0.3))`,
+                opacity: isHovered ? 1 : 0.6,
+                transition: "opacity 0.2s ease",
+              }} />
+
+              {/* Icon */}
+              <div style={{
+                width: 44, height: 44,
+                borderRadius: 12,
+                display: "flex", alignItems: "center", justifyContent: "center",
+                background: `hsl(${action.colorVar} / ${isDark ? 0.22 : 0.14})`,
+                color: `hsl(${action.colorVar})`,
+                border: `1px solid hsl(${action.colorVar} / ${isDark ? 0.3 : 0.22})`,
+                flexShrink: 0,
+                transition: "transform 0.2s ease",
+                transform: isHovered ? "scale(1.08)" : "scale(1)",
+              }}>
                 <action.Icon style={{ width: 22, height: 22 }} />
               </div>
-              <div className="academic-quick-action-label">
-                {label}
+
+              {/* Text */}
+              <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 4 }}>
+                <div style={{
+                  fontSize: 14, fontWeight: 700,
+                  color: `hsl(${action.colorVar})`,
+                  letterSpacing: "-0.01em",
+                  transition: "color 0.15s ease",
+                }}>
+                  {action.label}
+                </div>
+                {!isCompact && (
+                  <div style={{
+                    fontSize: 12, lineHeight: 1.45,
+                    color: "hsl(var(--muted-foreground))",
+                    fontWeight: 400,
+                  }}>
+                    {action.description}
+                  </div>
+                )}
               </div>
-              <div className="academic-quick-action-sublabel">
-                {sub}
-              </div>
-            </div>
+
+              {/* Arrow hint */}
+              <ArrowRight style={{
+                position: "absolute", bottom: 14, right: 14,
+                width: 14, height: 14,
+                color: `hsl(${action.colorVar} / ${isHovered ? 0.9 : 0.4})`,
+                transition: "all 0.2s ease",
+                transform: isHovered ? "translateX(2px)" : "translateX(0)",
+              }} />
+            </button>
           );
         })}
       </div>
-      {hasMore && (
-        <button
-          onClick={() => setShowAll(prev => !prev)}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "6px",
-            margin: "12px auto 0",
-            padding: "8px 16px",
-            borderRadius: "999px",
-            border: `1px solid hsl(var(--border))`,
-            background: "hsl(var(--muted))",
-            color: "hsl(var(--muted-foreground))",
-            fontSize: "12px",
-            fontWeight: 600,
-            cursor: "pointer",
-            transition: "all 0.2s ease",
-          }}
-        >
-          {showAll ? <ChevronUp style={{ width: 14, height: 14 }} /> : <ChevronDown style={{ width: 14, height: 14 }} />}
-          {showAll ? (t("home.quickActions.showLess") || "Λιγότερα") : (t("home.quickActions.showMore") || `+${quickActions.length - MAX_VISIBLE} περισσότερες ενέργειες`)}
-        </button>
-      )}
+
+      {/* ─── Tier 2: Secondary Compact Pills ─── */}
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 8, alignItems: "center" }}>
+        {(showSecondary ? secondaryActions : secondaryActions.slice(0, 4)).map((action) => {
+          const isHovered = hoveredKey === action.key;
+          return (
+            <button
+              key={action.key}
+              onClick={action.action}
+              onMouseEnter={() => setHoveredKey(action.key)}
+              onMouseLeave={() => setHoveredKey(null)}
+              disabled={!action.action}
+              style={{
+                display: "inline-flex", alignItems: "center", gap: 7,
+                padding: "7px 14px",
+                borderRadius: 999,
+                border: `1px solid ${isHovered ? `hsl(${action.colorVar} / 0.4)` : "hsl(var(--border))"}`,
+                background: isHovered
+                  ? `hsl(${action.colorVar} / ${isDark ? 0.12 : 0.07})`
+                  : `hsl(var(--muted) / ${isDark ? 0.7 : 0.5})`,
+                color: isHovered ? `hsl(${action.colorVar})` : "hsl(var(--muted-foreground))",
+                fontSize: 12, fontWeight: 600,
+                cursor: action.action ? "pointer" : "not-allowed",
+                transition: "all 0.15s ease",
+                whiteSpace: "nowrap",
+              }}
+            >
+              <action.Icon style={{ width: 14, height: 14, flexShrink: 0 }} />
+              {action.label}
+            </button>
+          );
+        })}
+        {secondaryActions.length > 4 && (
+          <button
+            onClick={() => setShowSecondary(p => !p)}
+            style={{
+              display: "inline-flex", alignItems: "center", gap: 5,
+              padding: "7px 12px",
+              borderRadius: 999,
+              border: "1px solid hsl(var(--border))",
+              background: "transparent",
+              color: "hsl(var(--muted-foreground))",
+              fontSize: 12, fontWeight: 500,
+              cursor: "pointer",
+              transition: "all 0.15s ease",
+            }}
+          >
+            {showSecondary
+              ? <><ChevronUp style={{ width: 12, height: 12 }} />{t("home.quickActions.showLess") || "Show less"}</>
+              : <><ChevronDown style={{ width: 12, height: 12 }} />+{secondaryActions.length - 4} {t("home.quickActions.more") || "more"}</>
+            }
+          </button>
+        )}
+      </div>
     </div>
   );
 };
