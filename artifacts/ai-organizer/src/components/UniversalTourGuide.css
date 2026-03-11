@@ -1,0 +1,433 @@
+/* Universal Tour Guide Styles - CRITICAL FIX FOR LAYERING */
+/* Theme-aware custom properties with fallbacks */
+:root {
+  /* Purple accent tuned for Think!Hub / Theory UI */
+  --tour-accent: var(--color-primary, rgba(139, 92, 246, 1));
+  --tour-accent-rgb: var(--color-primary-rgb, 139, 92, 246);
+  --tour-bg: var(--color-surface, rgba(5, 10, 20, 0.92));
+  --tour-bg-alt: var(--color-background, rgba(15, 20, 30, 0.92));
+  --tour-text: var(--color-text, rgba(255, 255, 255, 0.8));
+  --tour-text-strong: var(--color-text, rgba(255, 255, 255, 0.95));
+  --tour-border: var(--color-border, rgba(255, 255, 255, 0.1));
+}
+
+/* Light mode overrides — white/light backgrounds for readability */
+html[data-theme="light"] .tourOverlay {
+  background: radial-gradient(circle at center, rgba(0, 0, 0, 0.03), rgba(0, 0, 0, 0.25));
+}
+
+html[data-theme="light"] .tourTooltip {
+  --tour-bg: #ffffff;
+  --tour-bg-alt: #f8fafc;
+  --tour-text: rgba(15, 23, 42, 0.85);
+  --tour-text-strong: #0f172a;
+  --tour-border: rgba(99, 102, 241, 0.25);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(99, 102, 241, 0.2);
+}
+
+html[data-theme="light"] .tourTooltip:hover {
+  box-shadow: 0 22px 60px rgba(0, 0, 0, 0.15), 0 0 0 2px rgba(99, 102, 241, 0.3);
+}
+
+html[data-theme="light"] .tourTooltipArrow,
+html[data-theme="light"] .tourTooltipArrow::after {
+  border-color: #ffffff;
+}
+
+html[data-theme="light"] .tourTooltipHeader {
+  background: rgba(248, 250, 252, 0.8);
+  border-bottom-color: rgba(99, 102, 241, 0.2);
+}
+
+html[data-theme="light"] .tourTooltipTitle {
+  color: #0f172a;
+}
+
+html[data-theme="light"] .tourTooltipContent {
+  color: rgba(15, 23, 42, 0.85);
+}
+
+html[data-theme="light"] .tourTooltipClose {
+  color: rgba(15, 23, 42, 0.6);
+  background: rgba(15, 23, 42, 0.06);
+}
+
+html[data-theme="light"] .tourTooltipClose:hover {
+  background: rgba(15, 23, 42, 0.12);
+  color: #0f172a;
+}
+
+html[data-theme="light"] .tourTooltipBtnPrimary {
+  background: linear-gradient(135deg, #6366f1, #4f46e5);
+  color: #fff;
+}
+
+html[data-theme="light"] .tourTooltipBtnSecondary {
+  background: rgba(99, 102, 241, 0.12);
+  color: #4f46e5;
+}
+
+html[data-theme="light"] .tourTooltipBtnSkip {
+  color: rgba(15, 23, 42, 0.6);
+}
+
+/* Theme modes for tours: soft purple + soft green */
+.tourThemePurple {
+  --tour-accent: rgba(167, 139, 250, 1);
+  --tour-accent-rgb: 167, 139, 250;
+}
+
+.tourThemeGreen {
+  --tour-accent: rgba(74, 222, 128, 1);
+  --tour-accent-rgb: 74, 222, 128;
+}
+
+.tourOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  /* Softer dimming so highlighted panels and tour card remain clearly visible */
+  background: radial-gradient(circle at center, rgba(15, 23, 42, 0.1), rgba(15, 23, 42, 0.45));
+  z-index: 999999;
+  pointer-events: none;
+}
+
+.tour-highlight {
+  position: fixed;
+  pointer-events: none;
+  z-index: 1000000;
+  border-radius: 8px;
+  transition: top 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              left 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              width 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: top, left, width, height;
+}
+
+.tour-highlight::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  right: -4px;
+  bottom: -4px;
+  border: 2px solid var(--tour-accent);
+  border-radius: 12px;
+  background: transparent;
+  box-shadow: 
+    0 0 0 2px rgba(var(--tour-accent-rgb), 0.45),
+    0 0 18px rgba(var(--tour-accent-rgb), 0.38),
+    inset 0 0 14px rgba(var(--tour-accent-rgb), 0.22);
+  animation: tourHighlightPulse 1.5s ease-in-out infinite;
+}
+
+.tour-highlight::after {
+  content: '';
+  position: absolute;
+  top: -12px;
+  left: -12px;
+  right: -12px;
+  bottom: -12px;
+  border: 1px solid rgba(var(--tour-accent-rgb), 0.45);
+  border-radius: 18px;
+  background: transparent;
+  animation: tourHighlightOuterPulse 2.5s ease-in-out infinite;
+}
+
+@keyframes tourHighlightPulse {
+  0%, 100% {
+    box-shadow: 
+      0 0 0 2px rgba(var(--tour-accent-rgb), 0.45),
+      0 0 18px rgba(var(--tour-accent-rgb), 0.38),
+      inset 0 0 14px rgba(var(--tour-accent-rgb), 0.22);
+    border-color: var(--tour-accent);
+  }
+  50% {
+    box-shadow: 
+      0 0 0 3px rgba(var(--tour-accent-rgb), 0.6),
+      0 0 24px rgba(var(--tour-accent-rgb), 0.48),
+      inset 0 0 18px rgba(var(--tour-accent-rgb), 0.28);
+    border-color: var(--tour-accent);
+  }
+}
+
+@keyframes tourHighlightOuterPulse {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.02);
+  }
+}
+
+.tourTooltip {
+  position: fixed;
+  background: linear-gradient(135deg, 
+    var(--tour-bg), 
+    var(--tour-bg-alt)
+  );
+  border: 2px solid rgba(var(--tour-accent-rgb), 0.6);
+  border-radius: 16px;
+  padding: 0;
+  max-width: 450px;
+  min-width: 350px;
+  box-shadow: 
+    0 18px 48px rgba(0, 0, 0, 0.75),
+    0 0 0 2px rgba(var(--tour-accent-rgb), 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    0 0 24px rgba(var(--tour-accent-rgb), 0.28);
+  z-index: 1000001;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  opacity: 0.96;
+  pointer-events: auto;
+  backdrop-filter: blur(25px);
+  transform: translateZ(0);
+  user-select: none;
+  transition: box-shadow 0.2s ease;
+}
+
+.tourTooltip:hover {
+  box-shadow: 
+    0 22px 60px rgba(0, 0, 0, 0.85),
+    0 0 0 3px rgba(var(--tour-accent-rgb), 0.58),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25),
+    0 0 30px rgba(var(--tour-accent-rgb), 0.34);
+}
+
+.tourTooltipArrow {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border: 16px solid transparent;
+  border-color: rgba(5, 10, 20, 1);
+  z-index: -1;
+}
+
+.tourTooltipArrow::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 0;
+  border: 14px solid transparent;
+  border-color: rgba(5, 10, 20, 1);
+  left: -14px;
+}
+
+.tourTooltipHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px 12px 20px;
+  background: rgba(255, 255, 255, 0.02);
+  border-bottom: 1px solid var(--tour-border);
+  border-radius: 12px 12px 0 0;
+}
+
+.tourTooltipHeaderControls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.tourTooltipScreenshot {
+  background: rgba(114, 255, 191, 0.2);
+  border: 1px solid rgba(114, 255, 191, 0.4);
+  border-radius: 6px;
+  padding: 4px 8px;
+  color: rgba(114, 255, 191, 0.9);
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 32px;
+  text-align: center;
+}
+
+.tourTooltipScreenshot:hover {
+  background: rgba(114, 255, 191, 0.3);
+  border-color: rgba(114, 255, 191, 0.6);
+  transform: scale(1.05);
+}
+
+.tourTooltipScreenshot:active {
+  transform: scale(0.95);
+  background: rgba(114, 255, 191, 0.4);
+}
+
+.tourTooltipCoordinates {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 16px;
+  background: rgba(0, 0, 0, 0.3);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 11px;
+  font-family: 'Courier New', monospace;
+  border-radius: 0 0 12px 12px;
+}
+
+.coordInfo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.coordLabel {
+  color: rgba(var(--tour-accent-rgb), 0.7);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.coordValue {
+  color: var(--tour-text-strong);
+  font-weight: 500;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid rgba(var(--tour-accent-rgb), 0.3);
+}
+
+.tourTooltipTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--tour-accent);
+  line-height: 1.3;
+  margin: 0;
+}
+
+.tourTooltipClose {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 20px;
+  font-weight: 300;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  line-height: 1;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tourTooltipClose:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.9);
+  transform: scale(1.1);
+}
+
+.tourTooltipContent {
+  padding: 16px 20px;
+  font-size: 14px;
+  color: var(--tour-text);
+  line-height: 1.5;
+}
+
+.tourTooltipContent ul {
+  margin: 8px 0 0 0;
+  padding-left: 20px;
+}
+
+.tourTooltipContent li {
+  margin: 4px 0;
+}
+
+.tourTooltipActions {
+  padding: 16px 20px;
+  border-top: 1px solid var(--tour-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 0 0 12px 12px;
+}
+
+.tourTooltipProgress {
+  font-size: 12px;
+  color: rgba(var(--tour-accent-rgb), 0.8);
+  font-weight: 500;
+}
+
+.tourTooltipButtons {
+  display: flex;
+  gap: 8px;
+}
+
+.tourTooltipBtn {
+  padding: 8px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tourTooltipBtn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+.tourTooltipBtnPrimary {
+  background: rgba(var(--tour-accent-rgb), 0.15);
+  border-color: rgba(var(--tour-accent-rgb), 0.5);
+  color: var(--tour-accent);
+}
+
+.tourTooltipBtnPrimary:hover {
+  background: rgba(var(--tour-accent-rgb), 0.25);
+  border-color: rgba(var(--tour-accent-rgb), 0.7);
+}
+
+.tourTooltipBtnSecondary {
+  background: rgba(100, 150, 255, 0.1);
+  border-color: rgba(100, 150, 255, 0.3);
+  color: rgba(100, 150, 255, 0.9);
+}
+
+.tourTooltipBtnSecondary:hover {
+  background: rgba(100, 150, 255, 0.2);
+  border-color: rgba(100, 150, 255, 0.5);
+}
+
+.tourTooltipBtnSkip {
+  background: transparent;
+  border-color: rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.tourTooltipBtnSkip:hover {
+  background: rgba(255, 100, 100, 0.1);
+  border-color: rgba(255, 100, 100, 0.3);
+  color: rgba(255, 100, 100, 0.9);
+}
+
+/* Responsive design */
+@media (max-width: 480px) {
+  .tourTooltip {
+    max-width: calc(100vw - 40px);
+    min-width: calc(100vw - 40px);
+    left: 20px !important;
+    right: 20px !important;
+  }
+  
+  .tourTooltipButtons {
+    flex-direction: column;
+    gap: 6px;
+  }
+  
+  .tourTooltipBtn {
+    width: 100%;
+    text-align: center;
+  }
+}

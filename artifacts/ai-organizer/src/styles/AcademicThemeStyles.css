@@ -1,0 +1,268 @@
+/* Academic Theme Styles for AI_ORGANIZER Home.tsx */
+/* Theme-aware using CSS variables from index.css */
+
+:root {
+  /* Academic Spacing */
+  --space-academic-xs: 0.25rem;
+  --space-academic-sm: 0.5rem;
+  --space-academic-md: 1rem;
+  --space-academic-lg: 1.5rem;
+  --space-academic-xl: 2rem;
+  --space-academic-2xl: 3rem;
+  
+  /* Academic Border Radius — standardized to 3 values */
+  --radius-academic-sm: 0.5rem;
+  --radius-academic: 0.75rem;
+  --radius-academic-lg: 1rem;
+}
+
+/* ── Academic Welcome Banner (AcademicHeroCard) ────────────────────── */
+.academic-welcome-banner {
+  background: hsl(var(--card));
+  border-radius: var(--radius-academic-lg);
+  padding: var(--space-academic-md) var(--space-academic-lg);
+  margin-bottom: var(--space-academic-sm);
+  position: relative;
+  overflow: hidden;
+  border: 1px solid hsl(var(--border));
+  box-shadow: 0 4px 16px hsl(var(--foreground) / 0.06);
+}
+
+.academic-welcome-content {
+  position: relative;
+  z-index: 1;
+}
+
+.academic-welcome-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-academic-xs);
+  margin-bottom: var(--space-academic-xs);
+}
+
+.academic-welcome-header span {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: hsl(var(--primary));
+}
+
+.academic-welcome-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: hsl(var(--foreground));
+  margin: 0 0 var(--space-academic-xs) 0;
+  line-height: 1.3;
+}
+
+.academic-welcome-description {
+  font-size: 12px;
+  color: hsl(var(--muted-foreground));
+  margin: 0 0 var(--space-academic-md) 0;
+  line-height: 1.5;
+}
+
+.academic-welcome-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-academic-sm);
+  margin-top: var(--space-academic-md);
+}
+
+.academic-btn-primary {
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  border: none;
+  padding: 3px 14px;
+  border-radius: var(--radius-academic);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 3px 10px hsl(var(--primary) / 0.25);
+  display: inline-flex;
+  align-items: center;
+}
+
+.academic-btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 5px 16px hsl(var(--primary) / 0.35);
+}
+
+.academic-btn-secondary {
+  background: hsl(var(--muted));
+  color: hsl(var(--foreground));
+  border: 1px solid hsl(var(--border));
+  padding: 3px 14px;
+  border-radius: var(--radius-academic);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+}
+
+.academic-btn-secondary:hover {
+  background: hsl(var(--accent));
+  transform: translateY(-1px);
+}
+
+/* ── Academic Stats Grid ─────────────────────────────────────────── */
+.academic-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-academic-sm);
+}
+
+.academic-stat-card {
+  background: hsl(var(--muted));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius-academic);
+  padding: var(--space-academic-md);
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.academic-stat-card:hover {
+  background: hsl(var(--accent));
+  transform: translateY(-1px);
+}
+
+.academic-stat-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: hsl(var(--foreground));
+  margin: 0;
+  line-height: 1;
+}
+
+.academic-stat-label {
+  font-size: 10px;
+  color: hsl(var(--muted-foreground));
+  margin: 2px 0 0 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 500;
+}
+
+/* ── Academic Quick Actions ──────────────────────────────────────── */
+.academic-quick-actions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--space-academic-sm);
+}
+
+.academic-quick-action {
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius-academic-lg);
+  padding: var(--space-academic-md);
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.academic-quick-action:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px hsl(var(--foreground) / 0.08);
+  border-color: hsl(var(--primary) / 0.3);
+}
+
+.academic-quick-action-icon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto var(--space-academic-sm);
+  background: hsl(var(--muted));
+  border-radius: var(--radius-academic);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.academic-quick-action:hover .academic-quick-action-icon {
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  transform: scale(1.05);
+}
+
+.academic-quick-action-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: hsl(var(--foreground));
+  margin: 0 0 var(--space-academic-xs) 0;
+}
+
+.academic-quick-action-sublabel {
+  font-size: 11px;
+  color: hsl(var(--muted-foreground));
+  margin: 0;
+}
+
+/* ── Responsive Design ───────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .academic-welcome-banner {
+    padding: var(--space-academic-lg);
+  }
+  
+  .academic-welcome-title {
+    font-size: 20px;
+  }
+  
+  .academic-welcome-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .academic-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .academic-quick-actions {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  .academic-quick-action {
+    padding: 12px 8px;
+  }
+
+  .academic-quick-action-icon {
+    width: 36px;
+    height: 36px;
+    margin-bottom: 6px;
+  }
+
+  .academic-quick-action-icon svg {
+    width: 18px !important;
+    height: 18px !important;
+  }
+
+  .academic-quick-action-label {
+    font-size: 12px;
+  }
+
+  .academic-quick-action-sublabel {
+    font-size: 10px;
+  }
+}
+
+/* ── Mobile Chat Edge Slide Animation ── */
+@keyframes slideInRight {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes spin {
+  from { transform: translateX(-50%) rotate(0deg); }
+  to { transform: translateX(-50%) rotate(360deg); }
+}

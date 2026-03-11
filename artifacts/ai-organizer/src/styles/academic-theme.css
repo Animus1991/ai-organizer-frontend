@@ -1,0 +1,502 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+
+
+/* Academic Theme — component-level styles only.
+   Base CSS variables are defined in index.css. Do NOT redeclare them here.
+   Gold palette variables are added as plain :root (no @layer base). */
+
+:root {
+  --gold-50: 254 100% 98%;
+  --gold-100: 254 100% 95%;
+  --gold-200: 254 100% 87%;
+  --gold-300: 254 100% 76%;
+  --gold-400: 254 100% 65%;
+  --gold-500: 47.9 95.8% 53.1%;
+  --gold-600: 47.9 95.8% 40%;
+  --gold-700: 47.9 95.8% 32%;
+  --gold-800: 47.9 95.8% 26%;
+  --gold-900: 47.9 95.8% 21%;
+  --gold-950: 47.9 95.8% 12%;
+}
+
+@layer components {
+  /* Academic Card Component */
+  .academic-card {
+    @apply bg-card border border-border rounded-lg shadow-academic hover:shadow-academic-lg transition-all duration-300 ease-in-out;
+    @apply hover:border-gold-300 hover:shadow-gold;
+  }
+
+  .academic-card-header {
+    @apply px-6 py-4 border-b border-border;
+  }
+
+  .academic-card-content {
+    @apply px-6 py-4;
+  }
+
+  .academic-card-footer {
+    @apply px-6 py-4 border-t border-border bg-muted/50;
+  }
+
+  /* Academic Button Component */
+  .academic-button {
+    @apply inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+    @apply disabled:pointer-events-none disabled:opacity-50;
+  }
+
+  .academic-button-primary {
+    @apply academic-button bg-primary text-primary-foreground hover:bg-primary/90;
+    @apply hover:bg-gold-600 hover:text-white hover:shadow-gold;
+  }
+
+  .academic-button-secondary {
+    @apply academic-button bg-secondary text-secondary-foreground hover:bg-secondary/80;
+    @apply hover:bg-gold-100 hover:text-gold-800;
+  }
+
+  .academic-button-outline {
+    @apply academic-button border border-input bg-background hover:bg-accent hover:text-accent-foreground;
+    @apply hover:border-gold-300 hover:bg-gold-50 hover:text-gold-800;
+  }
+
+  /* Academic Badge Component */
+  .academic-badge {
+    @apply inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors;
+    @apply focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2;
+  }
+
+  .academic-badge-primary {
+    @apply academic-badge border-transparent bg-primary text-primary-foreground hover:bg-primary/80;
+    @apply bg-gold-500 text-white hover:bg-gold-600;
+  }
+
+  .academic-badge-secondary {
+    @apply academic-badge border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80;
+    @apply bg-gold-100 text-gold-800 hover:bg-gold-200;
+  }
+
+  .academic-badge-outline {
+    @apply academic-badge text-foreground;
+    @apply border-gold-300 text-gold-800 hover:bg-gold-50;
+  }
+
+  /* Academic Progress Component */
+  .academic-progress {
+    @apply relative h-4 w-full overflow-hidden rounded-full bg-secondary;
+    @apply bg-gold-100;
+  }
+
+  .academic-progress-indicator {
+    @apply h-full w-full flex-1 bg-primary transition-all;
+    @apply bg-gradient-to-r from-gold-400 to-gold-600;
+  }
+
+  /* Academic Input Component */
+  .academic-input {
+    @apply flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background;
+    @apply file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+    @apply disabled:cursor-not-allowed disabled:opacity-50;
+    @apply focus:border-gold-400 focus:ring-gold-200;
+  }
+
+  /* Academic Select Component */
+  .academic-select {
+    @apply academic-input;
+    @apply focus:border-gold-400 focus:ring-gold-200;
+  }
+
+  /* Academic Textarea Component */
+  .academic-textarea {
+    @apply flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background;
+    @apply placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring;
+    @apply focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50;
+    @apply focus:border-gold-400 focus:ring-gold-200;
+  }
+
+  /* Academic Table Component */
+  .academic-table {
+    @apply w-full caption-bottom text-sm;
+  }
+
+  .academic-table-header {
+    @apply border-b border-border;
+  }
+
+  .academic-table-row {
+    @apply border-b border-border transition-colors hover:bg-muted/50;
+    @apply hover:bg-gold-50/50;
+  }
+
+  .academic-table-head {
+    @apply h-12 px-4 text-left align-middle font-medium text-muted-foreground;
+    @apply text-gold-700;
+  }
+
+  .academic-table-cell {
+    @apply p-4 align-middle;
+  }
+
+  /* Academic Alert Component */
+  .academic-alert {
+    @apply relative w-full rounded-lg border p-4;
+    @apply [&>svg~*]:pl-7 [&>svg+div]:translate-y-[-3px] [&>svg]:absolute [&>svg]:left-4 [&>svg]:top-4 [&>svg]:text-foreground;
+  }
+
+  .academic-alert-default {
+    @apply academic-alert bg-background text-foreground border-border;
+    @apply border-gold-200 bg-gold-50 text-gold-800;
+  }
+
+  .academic-alert-success {
+    @apply academic-alert border-green-200 bg-green-50 text-green-800;
+  }
+
+  .academic-alert-warning {
+    @apply academic-alert border-yellow-200 bg-yellow-50 text-yellow-800;
+  }
+
+  .academic-alert-error {
+    @apply academic-alert border-red-200 bg-red-50 text-red-800;
+  }
+
+  /* Academic Dialog Component */
+  .academic-dialog {
+    @apply fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%];
+    @apply gap-4 border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in;
+    @apply data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0;
+    @apply data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2;
+    @apply data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2;
+    @apply data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg;
+    @apply border-gold-200 shadow-gold-lg;
+  }
+
+  /* Academic Tooltip Component */
+  .academic-tooltip {
+    @apply z-50 overflow-hidden rounded-md border bg-popover px-3 py-1.5 text-sm text-popover-foreground shadow-md animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2;
+    @apply border-gold-200 bg-gold-50 text-gold-800;
+  }
+
+  /* Academic Navigation Component */
+  .academic-nav {
+    @apply relative flex h-16 items-center px-4 border-b border-border;
+    @apply border-gold-200 bg-gradient-to-r from-white to-gold-50/30;
+  }
+
+  .academic-nav-link {
+    @apply text-sm font-medium transition-colors hover:text-primary;
+    @apply hover:text-gold-600;
+  }
+
+  .academic-nav-link-active {
+    @apply text-gold-600 font-semibold;
+  }
+
+  /* Academic Sidebar Component */
+  .academic-sidebar {
+    @apply pb-12 w-64 border-r border-border;
+    @apply border-gold-200 bg-gradient-to-b from-white to-gold-50/20;
+  }
+
+  .academic-sidebar-item {
+    @apply flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary hover:bg-accent;
+    @apply hover:text-gold-700 hover:bg-gold-100/50;
+  }
+
+  .academic-sidebar-item-active {
+    @apply bg-accent text-primary;
+    @apply bg-gold-100 text-gold-800 font-medium;
+  }
+
+  /* Academic Footer Component */
+  .academic-footer {
+    @apply border-t border-border py-6 md:px-8 md:py-0;
+    @apply border-gold-200 bg-gradient-to-r from-gold-50/30 to-white;
+  }
+
+  /* Academic Hero Component */
+  .academic-hero {
+    @apply relative overflow-hidden rounded-lg border bg-gradient-to-br from-gold-50 via-white to-academic-blue-50;
+    @apply border-gold-200 shadow-gold-lg;
+  }
+
+  .academic-hero-content {
+    @apply relative z-10 p-8 md:p-12 lg:p-16;
+  }
+
+  .academic-hero-title {
+    @apply text-3xl font-bold tracking-tight text-gold-900 sm:text-4xl md:text-5xl lg:text-6xl;
+    font-family: 'Georgia', serif;
+  }
+
+  .academic-hero-subtitle {
+    @apply mt-4 text-lg text-gold-700 sm:text-xl;
+    font-family: 'Inter', sans-serif;
+  }
+
+  /* Academic Stats Component */
+  .academic-stats {
+    @apply grid gap-4 md:grid-cols-2 lg:grid-cols-4;
+  }
+
+  .academic-stat-card {
+    @apply academic-card bg-gradient-to-br from-gold-50 to-white;
+  }
+
+  .academic-stat-number {
+    @apply text-2xl font-bold text-gold-600;
+    font-family: 'Georgia', serif;
+  }
+
+  .academic-stat-label {
+    @apply text-sm font-medium text-gold-700;
+  }
+
+  /* Academic Loading Component */
+  .academic-loading {
+    @apply animate-pulse rounded-md bg-gold-100;
+  }
+
+  .academic-loading-skeleton {
+    @apply animate-pulse rounded-md bg-gold-100 h-4 w-full;
+  }
+
+  .academic-loading-skeleton-lg {
+    @apply animate-pulse rounded-md bg-gold-100 h-8 w-full;
+  }
+
+  /* Academic Hover Effects */
+  .academic-hover-lift {
+    @apply transition-transform duration-300 ease-in-out hover:scale-105;
+  }
+
+  .academic-hover-glow {
+    @apply transition-all duration-300 ease-in-out hover:shadow-gold hover:border-gold-300;
+  }
+
+  .academic-hover-slide {
+    @apply transition-all duration-300 ease-in-out hover:translate-x-1;
+  }
+
+  /* Academic Focus Styles */
+  .academic-focus-ring {
+    @apply focus:outline-none focus:ring-2 focus:ring-gold-400 focus:ring-offset-2 focus:ring-offset-white;
+  }
+
+  /* Academic Text Styles */
+  .academic-heading {
+    @apply scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl;
+    @apply text-gold-900;
+    font-family: 'Georgia', serif;
+  }
+
+  .academic-subheading {
+    @apply scroll-m-20 text-3xl font-semibold tracking-tight;
+    @apply text-gold-800;
+    font-family: 'Georgia', serif;
+  }
+
+  .academic-body {
+    @apply leading-7 text-foreground;
+    @apply text-gray-700;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .academic-caption {
+    @apply text-sm text-muted-foreground;
+    @apply text-gold-600 font-medium;
+  }
+
+  /* Academic Link Styles */
+  .academic-link {
+    @apply text-gold-600 underline-offset-4 hover:underline;
+  }
+
+  .academic-link-external {
+    @apply academic-link;
+    @apply after:content-['_↗'] after:text-xs after:text-gold-500;
+  }
+
+  /* Academic Code Styles */
+  .academic-code {
+    @apply relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold;
+    @apply bg-gold-100 text-gold-800;
+  }
+
+  .academic-code-block {
+    @apply relative rounded bg-muted p-[0.75rem] font-mono text-sm;
+    @apply bg-gold-50 border border-gold-200;
+  }
+
+  /* Academic Blockquote Styles */
+  .academic-blockquote {
+    @apply mt-6 border-l-2 pl-6 italic;
+    @apply border-l-gold-400 text-gold-700;
+    font-family: 'Georgia', serif;
+  }
+
+  /* Academic List Styles */
+  .academic-list {
+    @apply my-6 ml-6 list-disc;
+    @apply text-gold-700;
+  }
+
+  .academic-list-item {
+    @apply mt-2;
+  }
+
+  /* Academic Separator Styles */
+  .academic-separator {
+    @apply my-8 border-t border-border;
+    @apply border-t-gold-200;
+  }
+
+  /* Academic Scrollbar Styles */
+  .academic-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: #fef08a #fffdf7;
+  }
+
+  /* Academic Print Styles */
+  @media print {
+    .academic-print-hidden {
+      @apply hidden;
+    }
+
+    .academic-print-only {
+      @apply block;
+    }
+
+    .academic-card {
+      @apply border border-gray-300 shadow-none;
+    }
+
+    .academic-hero {
+      @apply border border-gray-300 bg-white;
+    }
+  }
+
+  /* Academic Responsive Utilities */
+  @media (max-width: 768px) {
+    .academic-responsive-card {
+      @apply rounded-none border-l-0 border-r-0;
+    }
+
+    .academic-responsive-nav {
+      @apply h-auto py-4;
+    }
+
+    .academic-responsive-sidebar {
+      @apply w-full border-r-0 border-b;
+    }
+  }
+
+  /* Academic Dark Mode Overrides */
+  .dark .academic-card {
+    @apply bg-gray-900 border-gray-700;
+  }
+
+  .dark .academic-hero {
+    @apply bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900;
+  }
+
+  .dark .academic-button-primary {
+    @apply bg-gold-600 text-white hover:bg-gold-500;
+  }
+
+  .dark .academic-button-secondary {
+    @apply bg-gray-700 text-gray-100 hover:bg-gray-600;
+  }
+
+  .dark .academic-input {
+    @apply bg-gray-800 border-gray-600 text-gray-100;
+  }
+
+  .dark .academic-heading {
+    @apply text-gold-400;
+  }
+
+  .dark .academic-body {
+    @apply text-gray-300;
+  }
+
+  .dark .academic-link {
+    @apply text-gold-400;
+  }
+
+  .dark .academic-code {
+    @apply bg-gray-800 text-gold-400;
+  }
+
+  .dark .academic-code-block {
+    @apply bg-gray-800 border-gray-700;
+  }
+
+  .dark .academic-blockquote {
+    @apply border-l-gold-500 text-gold-400;
+  }
+
+  .dark .academic-list {
+    @apply text-gold-400;
+  }
+
+  .dark .academic-separator {
+    @apply border-gray-700;
+  }
+
+  .dark .academic-scrollbar {
+    scrollbar-color: #ca8a04 #1f2937;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .academic-gradient-primary {
+    @apply bg-gradient-to-r from-gold-400 to-gold-600;
+  }
+
+  .academic-gradient-secondary {
+    @apply bg-gradient-to-r from-academic-blue-400 to-academic-purple-600;
+  }
+
+  .academic-gradient-success {
+    @apply bg-gradient-to-r from-academic-green-400 to-academic-green-600;
+  }
+
+  .academic-shadow-gold {
+    @apply shadow-gold;
+  }
+
+  .academic-shadow-gold-lg {
+    @apply shadow-gold-lg;
+  }
+
+  .academic-border-gold {
+    @apply border-gold-200;
+  }
+
+  .academic-text-gold {
+    @apply text-gold-600;
+  }
+
+  .academic-bg-gold {
+    @apply bg-gold-50;
+  }
+
+  .academic-hover-gold:hover {
+    @apply bg-gold-100 text-gold-800 border-gold-300;
+  }
+
+  .academic-focus-gold:focus {
+    @apply border-gold-400 ring-gold-200;
+  }
+}

@@ -1,0 +1,290 @@
+/* src/editor/editor.css */
+
+/* === RichTextEditor layout (must fill parent) === */
+.rte-root {
+  height: 100%;
+  min-height: 0;                 /* κρίσιμο σε flex layouts */
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* toolbar: fixed height - Enhanced styling */
+.rte-toolbar {
+  flex: 0 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  padding: 12px 16px;
+  border: 1px solid rgba(99, 102, 241, 0.15);
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(30, 30, 40, 0.5) 0%, rgba(20, 20, 30, 0.3) 100%);
+  max-height: 200px;
+  overflow-y: auto;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.rte-btn {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  color: #eaeaea;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.rte-btn:hover:not(:disabled) {
+  background: rgba(99, 102, 241, 0.15);
+  border-color: rgba(99, 102, 241, 0.3);
+  color: #a5b4fc;
+  transform: translateY(-1px);
+}
+
+.rte-btn select {
+  background: transparent;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  font-size: inherit;
+  font-family: inherit;
+}
+
+.rte-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.rte-btn[aria-pressed="true"] {
+  border-color: rgba(99, 102, 241, 0.5);
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%);
+  color: #a5b4fc;
+  box-shadow: 0 0 8px rgba(99, 102, 241, 0.2);
+}
+
+/* editor area: takes ALL remaining height and scrolls internally */
+.rte-editor {
+  flex: 1 1 auto;
+  min-height: 0;                 /* κρίσιμο */
+  min-width: 0;
+  max-width: 100%;
+  padding: 16px 20px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  background: rgba(0, 0, 0, 0.2);
+  overflow-y: auto;              /* scroll ΕΔΩ */
+  overflow-x: hidden;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.rte-editor .ProseMirror {
+  outline: none;
+  line-height: 1.55;
+  max-width: 100%;
+  min-width: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.rte-editor pre {
+  overflow-x: auto;
+}
+
+.rte-editor .ProseMirror img,
+.rte-editor .ProseMirror video,
+.rte-editor .ProseMirror iframe {
+  max-width: 100%;
+  height: auto;
+}
+
+.rte-editor .ProseMirror table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.rte-editor .ProseMirror p {
+  margin: 0 0 10px 0;
+}
+
+/* === StatusBar (new) === */
+.statusbar {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(30, 30, 40, 0.3) 0%, rgba(20, 20, 30, 0.2) 100%);
+}
+
+.statusbar__counts {
+  opacity: 0.85;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.statusbar__actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.btn {
+  padding: 7px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.9);
+  cursor: pointer;
+}
+
+.btn.primary {
+  background: rgba(114, 255, 191, 0.12);
+  border-color: rgba(114, 255, 191, 0.25);
+}
+
+/* === Find/Replace modal === */
+.rte-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.rte-modal {
+  width: min(720px, 92vw);
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(10, 12, 18, 0.98);
+  padding: 14px;
+}
+
+.rte-field {
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  color: inherit;
+}
+
+/* === Chunk editor helpers (modal) ===
+   Βάζεις className="chunk-editor-shell" στο wrapper που θες να γεμίζει.
+*/
+.chunk-editor-shell {
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.chunk-rte {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden; /* scroll θα γίνει μέσα στο .rte-editor */
+}
+
+/* =========================================================
+   LIGHT MODE OVERRIDES
+   ========================================================= */
+html[data-theme="light"] .rte-toolbar {
+  background: #ffffff !important;
+  border: 1px solid rgba(47, 41, 65, 0.08) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
+}
+
+html[data-theme="light"] .rte-btn {
+  background: rgba(47, 41, 65, 0.05) !important;
+  border-color: rgba(47, 41, 65, 0.12) !important;
+  color: #2f2941 !important;
+}
+
+html[data-theme="light"] .rte-btn:hover:not(:disabled) {
+  background: rgba(99, 102, 241, 0.1) !important;
+  border-color: rgba(99, 102, 241, 0.25) !important;
+  color: #6366f1 !important;
+}
+
+html[data-theme="light"] .rte-btn[aria-pressed="true"] {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.12) 0%, rgba(139, 92, 246, 0.1) 100%) !important;
+  border-color: rgba(99, 102, 241, 0.35) !important;
+  color: #6366f1 !important;
+}
+
+html[data-theme="light"] .rte-editor {
+  background: #ffffff !important;
+  border: 1px solid rgba(47, 41, 65, 0.08) !important;
+  color: #2f2941 !important;
+}
+
+html[data-theme="light"] .rte-editor .ProseMirror {
+  color: #2f2941 !important;
+}
+
+html[data-theme="light"] .rte-editor .ProseMirror p.is-editor-empty:first-child::before {
+  color: rgba(47, 41, 65, 0.4) !important;
+}
+
+html[data-theme="light"] .statusbar {
+  background: #ffffff !important;
+  border-color: rgba(47, 41, 65, 0.12) !important;
+  color: #2f2941 !important;
+}
+
+html[data-theme="light"] .statusbar__counts {
+  color: rgba(47, 41, 65, 0.7) !important;
+}
+
+html[data-theme="light"] .btn {
+  background: rgba(47, 41, 65, 0.05) !important;
+  border-color: rgba(47, 41, 65, 0.15) !important;
+  color: #2f2941 !important;
+}
+
+html[data-theme="light"] .btn.primary {
+  background: rgba(16, 185, 129, 0.1) !important;
+  border-color: rgba(16, 185, 129, 0.25) !important;
+  color: #059669 !important;
+}
+
+html[data-theme="light"] .rte-modal {
+  background: #ffffff !important;
+  border-color: rgba(47, 41, 65, 0.15) !important;
+  color: #2f2941 !important;
+}
+
+html[data-theme="light"] .rte-field {
+  background: #ffffff !important;
+  border-color: rgba(47, 41, 65, 0.15) !important;
+  color: #2f2941 !important;
+}
+
+/* Chunk tab buttons — no black border in light mode */
+html[data-theme="light"] .chunk-tab-btn {
+  background: rgba(47, 41, 65, 0.05) !important;
+  border: none !important;
+  border-color: transparent !important;
+  color: #2f2941 !important;
+}
+
+html[data-theme="light"] .chunk-tab-btn:hover {
+  background: rgba(99, 102, 241, 0.08) !important;
+  border: none !important;
+  border-color: transparent !important;
+  color: #6366f1 !important;
+}
