@@ -35,6 +35,7 @@ import "../styles/AcademicThemeStyles.css";
 const HomeCommunityStrip = lazy(() => import('../components/home/HomeCommunityStrip').then(m => ({ default: m.HomeCommunityStrip })));
 const HomeDashboardFeedPanel = lazy(() => import('../components/home/HomeNotificationsStrip').then(m => ({ default: m.HomeDashboardFeedPanel })));
 import { HomeStoriesStrip } from '../components/home/HomeStoriesStrip';
+import { MobileGreetingBanner } from '../components/home/MobileGreetingBanner';
 import { BackToTopButton } from '../components/home/BackToTopButton';
 import { MobileBottomNav } from '../components/home/MobileBottomNav';
 import { HomeNotificationsPanel } from '../components/home/HomeNotificationsStrip';
@@ -463,9 +464,17 @@ export default function Home() {
               />
             </div>
 
-            {/* ── 2. Stories Strip — hide on mobile */}
-            {!isCompactHome && !isMobile && (
-              <div style={{ marginBottom: `-${tokens.spacing.sm}px` }}>
+            {/* ── 2a. Mobile Greeting Banner — above the fold on mobile only */}
+            {isMobile && (
+              <MobileGreetingBanner
+                userEmail={user?.email}
+                totalSegments={totalSegments}
+              />
+            )}
+
+            {/* ── 2b. Stories Strip — always visible (horizontal scroll on mobile) */}
+            {!isCompactHome && (
+              <div style={{ marginBottom: isMobile ? 0 : `-${tokens.spacing.sm}px` }}>
                 <HomeStoriesStrip />
               </div>
             )}

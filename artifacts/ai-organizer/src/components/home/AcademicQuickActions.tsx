@@ -127,15 +127,11 @@ export const AcademicQuickActions: React.FC<AcademicQuickActionsProps> = ({
 
   // ── Mobile layout ──
   if (isMobile) {
-    const allActions = [
-      ...primaryActions.map(a => ({ ...a, isPrimary: true })),
-      ...secondaryActions.map(a => ({ ...a, isPrimary: false })),
-    ];
-    const visible = showSecondary ? allActions : allActions.slice(0, 8);
     return (
-      <div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "8px" }}>
-          {visible.map((action) => (
+      <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+        {/* Primary actions — 2-column hero cards */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 10 }}>
+          {primaryActions.map((action) => (
             <button
               key={action.key}
               onClick={action.action}
@@ -143,53 +139,108 @@ export const AcademicQuickActions: React.FC<AcademicQuickActionsProps> = ({
               style={{
                 display: "flex",
                 flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: "4px",
-                padding: "10px 4px",
-                borderRadius: "12px",
-                border: `1px solid hsl(${action.colorVar} / ${isDark ? 0.22 : 0.15})`,
-                background: `hsl(${action.colorVar} / ${isDark ? 0.1 : 0.05})`,
+                alignItems: "flex-start",
+                gap: 8,
+                padding: "14px 14px 12px",
+                borderRadius: 14,
+                border: `1px solid hsl(${action.colorVar} / ${isDark ? 0.28 : 0.18})`,
+                background: `linear-gradient(135deg, hsl(${action.colorVar} / ${isDark ? 0.14 : 0.07}), hsl(${action.colorVar} / ${isDark ? 0.05 : 0.02}))`,
                 cursor: action.action ? "pointer" : "default",
                 transition: "all 0.15s ease",
+                textAlign: "left",
+                position: "relative",
+                overflow: "hidden",
+                minHeight: 90,
+                WebkitTapHighlightColor: "transparent",
               }}
             >
+              {/* Top accent stripe */}
               <div style={{
-                width: 36, height: 36, borderRadius: 10,
+                position: "absolute", top: 0, left: 0, right: 0, height: 2,
+                borderRadius: "14px 14px 0 0",
+                background: `linear-gradient(90deg, hsl(${action.colorVar}), hsl(${action.colorVar} / 0.3))`,
+                opacity: 0.75,
+              }} />
+              {/* Icon */}
+              <div style={{
+                width: 38, height: 38, borderRadius: 10,
                 display: "flex", alignItems: "center", justifyContent: "center",
-                background: `hsl(${action.colorVar} / ${isDark ? 0.2 : 0.12})`,
+                background: `hsl(${action.colorVar} / ${isDark ? 0.22 : 0.14})`,
                 color: `hsl(${action.colorVar})`,
-                border: `1px solid hsl(${action.colorVar} / ${isDark ? 0.32 : 0.2})`,
+                border: `1px solid hsl(${action.colorVar} / ${isDark ? 0.3 : 0.22})`,
+                flexShrink: 0,
               }}>
-                <action.Icon style={{ width: 18, height: 18 }} />
+                <action.Icon style={{ width: 20, height: 20 }} />
               </div>
-              <span style={{
-                fontSize: "10px", fontWeight: 600,
-                color: "hsl(var(--foreground))",
-                textAlign: "center", lineHeight: 1.2,
-                overflow: "hidden", textOverflow: "ellipsis",
-                whiteSpace: "nowrap", maxWidth: "100%",
-              }}>
-                {action.label}
-              </span>
+              {/* Label */}
+              <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 2 }}>
+                <span style={{
+                  fontSize: 13, fontWeight: 700,
+                  color: `hsl(${action.colorVar})`,
+                  lineHeight: 1.2,
+                }}>
+                  {action.label}
+                </span>
+              </div>
+              {/* Arrow */}
+              <ArrowRight style={{
+                position: "absolute", bottom: 10, right: 10,
+                width: 12, height: 12,
+                color: `hsl(${action.colorVar} / 0.4)`,
+              }} />
             </button>
           ))}
         </div>
-        {allActions.length > 8 && (
-          <button
-            onClick={() => setShowSecondary(p => !p)}
-            style={{
-              display: "flex", alignItems: "center", gap: "4px",
-              margin: "8px auto 0", padding: "6px 14px",
-              borderRadius: "999px", border: "1px solid hsl(var(--border))",
-              background: "hsl(var(--muted))", color: "hsl(var(--muted-foreground))",
-              fontSize: "11px", fontWeight: 600, cursor: "pointer",
-            }}
-          >
-            {showSecondary ? <ChevronUp style={{ width: 12, height: 12 }} /> : <ChevronDown style={{ width: 12, height: 12 }} />}
-            {showSecondary ? (t("home.quickActions.showLess") || "Show less") : `+${allActions.length - 8} more`}
-          </button>
-        )}
+
+        {/* Secondary actions — compact icon+label row */}
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+          {(showSecondary ? secondaryActions : secondaryActions.slice(0, 4)).map((action) => (
+            <button
+              key={action.key}
+              onClick={action.action}
+              aria-label={action.label}
+              style={{
+                display: "inline-flex", alignItems: "center", gap: 6,
+                padding: "8px 12px",
+                borderRadius: 999,
+                border: "1px solid hsl(var(--border))",
+                background: `hsl(var(--muted) / ${isDark ? 0.6 : 0.5})`,
+                color: "hsl(var(--muted-foreground))",
+                fontSize: 12, fontWeight: 600,
+                cursor: action.action ? "pointer" : "default",
+                transition: "all 0.12s ease",
+                whiteSpace: "nowrap",
+                WebkitTapHighlightColor: "transparent",
+                minHeight: 36,
+              }}
+            >
+              <action.Icon style={{ width: 13, height: 13, flexShrink: 0 }} />
+              {action.label}
+            </button>
+          ))}
+          {secondaryActions.length > 4 && (
+            <button
+              onClick={() => setShowSecondary(p => !p)}
+              style={{
+                display: "inline-flex", alignItems: "center", gap: 4,
+                padding: "8px 12px",
+                borderRadius: 999,
+                border: "1px solid hsl(var(--border))",
+                background: "transparent",
+                color: "hsl(var(--muted-foreground))",
+                fontSize: 12, fontWeight: 500,
+                cursor: "pointer",
+                minHeight: 36,
+                WebkitTapHighlightColor: "transparent",
+              }}
+            >
+              {showSecondary
+                ? <><ChevronUp style={{ width: 11, height: 11 }} />{t("home.quickActions.showLess") || "Show less"}</>
+                : <><ChevronDown style={{ width: 11, height: 11 }} />+{secondaryActions.length - 4} {t("home.quickActions.more") || "more"}</>
+              }
+            </button>
+          )}
+        </div>
       </div>
     );
   }

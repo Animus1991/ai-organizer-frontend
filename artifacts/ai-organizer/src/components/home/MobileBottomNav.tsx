@@ -12,10 +12,10 @@ interface MobileBottomNavProps {
 }
 
 const NAV_ITEMS = [
-  { id: "workflow-orchestration", label: "Ροή", icon: Briefcase },
-  { id: "insights-zone", label: "Ανάλυση", icon: BarChart3 },
-  { id: "identity-community", label: "Ταυτότητα", icon: Fingerprint },
-  { id: "community-hub", label: "Κοινότητα", icon: Users },
+  { id: "workflow-orchestration", label: "Workflow",  icon: Briefcase  },
+  { id: "insights-zone",          label: "Insights",  icon: BarChart3  },
+  { id: "identity-community",     label: "Identity",  icon: Fingerprint },
+  { id: "community-hub",          label: "Community", icon: Users      },
 ] as const;
 
 const HIDE_DELAY = 3000;

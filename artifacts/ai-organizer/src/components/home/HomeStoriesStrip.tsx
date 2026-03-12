@@ -18,6 +18,7 @@ import React, { useState, useRef, useMemo, useEffect, useCallback } from "react"
 import { useTheme } from "../../context/ThemeContext";
 import { useLanguage } from "../../context/LanguageContext";
 import { useUserData } from "../../context/UserDataContext";
+import { useIsMobile } from "../../hooks/use-mobile";
 import { SegmentedControl } from "../ui/SegmentedControl";
 import {
   FlaskConical, Megaphone, HelpCircle, Trophy, Lightbulb, FileText, Rocket,
@@ -567,6 +568,7 @@ export function HomeStoriesStrip() {
   const { isDark } = useTheme();
   const { t } = useLanguage();
   const { stats } = useUserData();
+  const isMobile = useIsMobile();
 
   // Inject ring animation CSS once on mount
   useEffect(() => { injectRingCss(); }, []);
@@ -704,25 +706,28 @@ export function HomeStoriesStrip() {
 
       {/* Scroll area */}
       <div style={{ position: "relative" }}>
-        {/* Left scroll arrow */}
-        <button onClick={() => scrollBy(-1)} style={{
-          position: "absolute", left: "-12px", top: "50%", transform: "translateY(-50%)",
-          zIndex: 3, width: "28px", height: "28px", borderRadius: "50%",
-          background: "hsl(var(--card))",
-          border: "1px solid hsl(var(--border))",
-          boxShadow: isDark ? "0 2px 8px hsl(var(--background) / 0.6)" : "0 2px 8px hsl(var(--foreground) / 0.1)",
-          color: "hsl(var(--muted-foreground))", fontSize: "13px", cursor: "pointer",
-          display: "flex", alignItems: "center", justifyContent: "center",
-        }}>‹</button>
+        {/* Left scroll arrow — hidden on mobile (native touch swipe) */}
+        {!isMobile && (
+          <button onClick={() => scrollBy(-1)} style={{
+            position: "absolute", left: "-12px", top: "50%", transform: "translateY(-50%)",
+            zIndex: 3, width: "28px", height: "28px", borderRadius: "50%",
+            background: "hsl(var(--card))",
+            border: "1px solid hsl(var(--border))",
+            boxShadow: isDark ? "0 2px 8px hsl(var(--background) / 0.6)" : "0 2px 8px hsl(var(--foreground) / 0.1)",
+            color: "hsl(var(--muted-foreground))", fontSize: "13px", cursor: "pointer",
+            display: "flex", alignItems: "center", justifyContent: "center",
+          }}>‹</button>
+        )}
 
         <div ref={scrollRef} style={{
-          display: "flex", gap: "14px", overflowX: "auto", paddingBottom: "8px",
-          paddingLeft: "40px",
+          display: "flex", gap: isMobile ? "10px" : "14px", overflowX: "auto", paddingBottom: "8px",
+          paddingLeft: isMobile ? "2px" : "40px",
           scrollbarWidth: "none", msOverflowStyle: "none",
+          WebkitOverflowScrolling: "touch",
         }}>
           {/* ── "Your Story" add card ── */}
           <button onClick={() => setShowCreate(true)} style={{
-            flexShrink: 0, width: "140px", height: "264px",
+            flexShrink: 0, width: isMobile ? "110px" : "140px", height: isMobile ? "200px" : "264px",
             borderRadius: "var(--radius)", border: `2px dashed hsl(var(--primary) / 0.3)`,
             background: `hsl(var(--primary) / ${isDark ? 0.06 : 0.03})`,
             cursor: "pointer", display: "flex", flexDirection: "column",
@@ -763,7 +768,7 @@ export function HomeStoriesStrip() {
                 key={story.id}
                 onClick={() => handleView(story, filteredIdx)}
                 style={{
-                  flexShrink: 0, width: "200px", height: "264px",
+                  flexShrink: 0, width: isMobile ? "160px" : "200px", height: isMobile ? "200px" : "264px",
                   borderRadius: "var(--radius)", cursor: "pointer", position: "relative",
                   overflow: "hidden",
                   background: "hsl(var(--card))",
@@ -966,16 +971,18 @@ export function HomeStoriesStrip() {
           )}
         </div>
 
-        {/* Right scroll arrow */}
-        <button onClick={() => scrollBy(1)} style={{
-          position: "absolute", right: "-12px", top: "50%", transform: "translateY(-50%)",
-          zIndex: 3, width: "28px", height: "28px", borderRadius: "50%",
-          background: "hsl(var(--card))",
-          border: "1px solid hsl(var(--border))",
-          boxShadow: isDark ? "0 2px 8px hsl(var(--background) / 0.6)" : "0 2px 8px hsl(var(--foreground) / 0.1)",
-          color: "hsl(var(--muted-foreground))", fontSize: "13px", cursor: "pointer",
-          display: "flex", alignItems: "center", justifyContent: "center",
-        }}>›</button>
+        {/* Right scroll arrow — hidden on mobile */}
+        {!isMobile && (
+          <button onClick={() => scrollBy(1)} style={{
+            position: "absolute", right: "-12px", top: "50%", transform: "translateY(-50%)",
+            zIndex: 3, width: "28px", height: "28px", borderRadius: "50%",
+            background: "hsl(var(--card))",
+            border: "1px solid hsl(var(--border))",
+            boxShadow: isDark ? "0 2px 8px hsl(var(--background) / 0.6)" : "0 2px 8px hsl(var(--foreground) / 0.1)",
+            color: "hsl(var(--muted-foreground))", fontSize: "13px", cursor: "pointer",
+            display: "flex", alignItems: "center", justifyContent: "center",
+          }}>›</button>
+        )}
       </div>
 
       {/* Header — below stories */}
