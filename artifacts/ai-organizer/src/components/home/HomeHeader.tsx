@@ -299,7 +299,8 @@ export function HomeHeader({ user, onLogout, onSearchClick, onUploadClick, onNav
           {/* Theme picker */}
           <div style={{ position: "relative", flexShrink: 0 }}>
             <button ref={themePickerBtnRef} onClick={openThemePicker} title="Change appearance theme" style={{ display: "flex", alignItems: "center", gap: "4px", padding: "5px 10px", borderRadius: "20px", fontSize: "11.5px", fontWeight: 600, background: themePickerOpen ? `hsl(var(--primary) / ${isDark ? 0.22 : 0.13})` : `hsl(var(--primary) / ${isDark ? 0.12 : 0.07})`, border: "none", outline: "none", boxShadow: "none", color: "hsl(var(--primary))", cursor: "pointer", transition: "all 0.15s" }} onMouseEnter={e => { e.currentTarget.style.background = `hsl(var(--primary) / ${isDark ? 0.2 : 0.13})`; }} onMouseLeave={e => { if (!themePickerOpen) e.currentTarget.style.background = `hsl(var(--primary) / ${isDark ? 0.12 : 0.07})`; }}>
-              <themeInfo.Icon style={{ width: 13, height: 13 }} />{themeInfo.label}
+              <themeInfo.Icon style={{ width: 13, height: 13 }} />
+              <span style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.02em" }}>{themeInfo.label}</span>
               <ChevronDown style={{ width: 9, height: 9, opacity: 0.6, transform: themePickerOpen ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.15s" }} />
             </button>
             {themePickerOpen && themePickerPos && createPortal(

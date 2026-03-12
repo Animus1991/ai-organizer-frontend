@@ -377,6 +377,28 @@ export default function Home() {
       )}
 
       <style>{getHomeStyles(colors)}</style>
+      <style>{`
+        @keyframes accentBarShimmer {
+          0%   { background-position: 0%   50%; }
+          50%  { background-position: 100% 50%; }
+          100% { background-position: 0%   50%; }
+        }
+      `}</style>
+
+      {/* ── Animated gradient top accent bar ── */}
+      <div
+        aria-hidden
+        style={{
+          position: "fixed",
+          top: 0, left: 0, right: 0,
+          height: 3,
+          background: "linear-gradient(90deg, hsl(var(--primary)), hsl(var(--accent)), hsl(var(--destructive)), hsl(var(--primary)))",
+          backgroundSize: "300% 100%",
+          animation: "accentBarShimmer 5s ease-in-out infinite",
+          zIndex: 9997,
+          pointerEvents: "none",
+        }}
+      />
 
       <main id="main-content" style={{ outline: "none" }} tabIndex={-1}>
         <div style={{ display: "flex", flexDirection: "column", gap: `${tokens.spacing.md}px` }}>

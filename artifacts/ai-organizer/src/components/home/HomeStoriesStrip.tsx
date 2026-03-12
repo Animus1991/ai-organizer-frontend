@@ -845,11 +845,41 @@ export function HomeStoriesStrip() {
                 {/* Title */}
                 <p style={{
                   margin: 0, fontSize: "12px", fontWeight: 700, color: "hsl(var(--foreground))",
-                  lineHeight: 1.35, flex: 1, overflow: "hidden",
-                  display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical" as const,
+                  lineHeight: 1.35, overflow: "hidden",
+                  display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical" as const,
+                  marginBottom: 6,
                 }}>
                   {story.title}
                 </p>
+
+                {/* Tag chips + reading time */}
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 4, marginBottom: 6 }}>
+                  {story.tags.slice(0, 2).map(tag => (
+                    <span key={tag} style={{
+                      fontSize: 9, fontWeight: 600,
+                      padding: "2px 6px", borderRadius: 999,
+                      background: `hsl(var(--muted) / 0.7)`,
+                      color: "hsl(var(--muted-foreground))",
+                      border: "1px solid hsl(var(--border))",
+                      letterSpacing: "0.02em",
+                      whiteSpace: "nowrap",
+                    }}>#{tag}</span>
+                  ))}
+                  {story.tags.length > 2 && (
+                    <span style={{
+                      fontSize: 9, fontWeight: 600,
+                      padding: "2px 6px", borderRadius: 999,
+                      background: "hsl(var(--muted) / 0.5)",
+                      color: "hsl(var(--muted-foreground))",
+                    }}>+{story.tags.length - 2}</span>
+                  )}
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: 4, marginBottom: 4 }}>
+                  <Clock3 style={{ width: 9, height: 9, color: "hsl(var(--muted-foreground))", flexShrink: 0 }} />
+                  <span style={{ fontSize: 9, color: "hsl(var(--muted-foreground))" }}>
+                    {Math.max(1, Math.ceil(story.body.split(" ").length / 200))} min read
+                  </span>
+                </div>
 
                 {/* Footer */}
                 <div style={{ display: "flex", alignItems: "center", gap: "8px", marginTop: "8px", flexWrap: "nowrap" }}>

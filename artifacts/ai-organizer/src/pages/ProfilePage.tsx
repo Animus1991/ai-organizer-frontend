@@ -72,6 +72,19 @@ export default function ProfilePage() {
   const starredDocs = getFavoritesByType("document");
   const totalDocuments = Object.keys(statuses).length;
 
+  const completenessScore = useMemo(() => {
+    let pts = 0;
+    if (profile.bio)                           pts += 15;
+    if (profile.institution)                   pts += 15;
+    if (profile.department)                    pts += 10;
+    if (profile.position)                      pts += 10;
+    if (profile.website)                       pts += 10;
+    if (profile.orcid)                         pts += 10;
+    if ((profile.expertise ?? []).length > 0)          pts += 15;
+    if ((profile.researchInterests ?? []).length > 0)  pts += 15;
+    return pts;
+  }, [profile]);
+
   const joinDate = useMemo(() => {
     const stored = localStorage.getItem("user-join-date");
     if (stored) return new Date(stored);
@@ -102,6 +115,66 @@ export default function ProfilePage() {
             onCoverImageChange={handleCoverImageChange}
           />
         </AnimatedSection>
+
+        {/* ── Profile Completeness Bar ── */}
+        {!editMode && (
+          <AnimatedSection delay={20}>
+            <div style={{
+              padding: "14px 20px",
+              background: "hsl(var(--card))",
+              borderRadius: 12,
+              border: "1px solid hsl(var(--border))",
+              marginBottom: 16,
+            }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+                <span style={{ fontSize: 13, fontWeight: 700, color: "hsl(var(--foreground))" }}>
+                  {t("profile.completeness") || "Profile Completeness"}
+                </span>
+                <span style={{
+                  fontSize: 13, fontWeight: 700,
+                  color: completenessScore === 100
+                    ? "hsl(var(--success))"
+                    : completenessScore > 60 ? "hsl(var(--primary))" : "hsl(var(--warning))",
+                }}>
+                  {completenessScore}%
+                </span>
+              </div>
+              <div style={{ height: 6, borderRadius: 999, background: "hsl(var(--muted))", overflow: "hidden" }}>
+                <div style={{
+                  height: "100%", borderRadius: 999,
+                  width: `${completenessScore}%`,
+                  background: completenessScore === 100
+                    ? "hsl(var(--success))"
+                    : completenessScore > 60 ? "hsl(var(--primary))" : "hsl(var(--warning))",
+                  transition: "width 0.9s cubic-bezier(0.4,0,0.2,1)",
+                }} />
+              </div>
+              {completenessScore < 100 && (
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 8 }}>
+                  <p style={{ margin: 0, fontSize: 12, color: "hsl(var(--muted-foreground))" }}>
+                    {completenessScore < 60
+                      ? (t("profile.completenessLow") || "Complete your profile to increase visibility in the research community.")
+                      : (t("profile.completenessHigh") || "Almost there! Fill in the remaining fields to maximise your profile.")}
+                  </p>
+                  <button
+                    onClick={() => setEditMode(true)}
+                    style={{
+                      flexShrink: 0, marginLeft: 12,
+                      padding: "5px 12px", borderRadius: 999,
+                      border: "1px solid hsl(var(--primary) / 0.4)",
+                      background: "hsl(var(--primary) / 0.1)",
+                      color: "hsl(var(--primary))",
+                      fontSize: 11, fontWeight: 700,
+                      cursor: "pointer", whiteSpace: "nowrap",
+                    }}
+                  >
+                    Complete →
+                  </button>
+                </div>
+              )}
+            </div>
+          </AnimatedSection>
+        )}
 
         {/* Edit Profile Panel */}
         {editMode && (
