@@ -44,8 +44,18 @@ export default function LibraryPage() {
     list: useRef<HTMLDivElement | null>(null),
   };
 
+  // ── Demo mode fallback data ──
+  const DEMO_ITEMS: LibraryItemDTO[] = useMemo(() => [
+    { id: "demo-1", title: "Attention Is All You Need", category: "paper", tags: "NLP,Transformers,Deep Learning", grade: "A", uploadId: "d1", createdAt: new Date(Date.now() - 86400000 * 2).toISOString() },
+    { id: "demo-2", title: "BERT: Pre-training of Deep Bidirectional Transformers", category: "paper", tags: "NLP,BERT,Language Models", grade: "A+", uploadId: "d2", createdAt: new Date(Date.now() - 86400000 * 5).toISOString() },
+    { id: "demo-3", title: "Research Methodology Notes — Q1 2026", category: "note", tags: "Research,Methods", grade: "B+", uploadId: "d3", createdAt: new Date(Date.now() - 86400000 * 1).toISOString() },
+    { id: "demo-4", title: "Federated Learning Survey", category: "paper", tags: "Federated Learning,Privacy,Distributed", grade: "A-", uploadId: "d4", createdAt: new Date(Date.now() - 86400000 * 10).toISOString() },
+    { id: "demo-5", title: "Thesis Draft — Chapter 3: Results", category: "document", tags: "Thesis,Results", grade: "", uploadId: "d5", createdAt: new Date(Date.now() - 86400000 * 3).toISOString() },
+  ], []);
+
   // ── Data fetching ──
   useEffect(() => {
+    const isDemoMode = localStorage.getItem("demo_mode") === "true";
     execute(async () => {
       try {
         const data = await listLibraryItems({
@@ -56,10 +66,16 @@ export default function LibraryPage() {
         setItems(data);
         setError(null);
       } catch (e: any) {
-        setError(e?.message || "Failed to load library items");
+        if (isDemoMode) {
+          // In demo mode, silently fall back to demo data
+          setItems(DEMO_ITEMS);
+          setError(null);
+        } else {
+          setError(e?.message || "Failed to load library items");
+        }
       }
     });
-  }, [execute, selectedCategory, selectedTag, searchQuery]);
+  }, [execute, selectedCategory, selectedTag, searchQuery, DEMO_ITEMS]);
 
   // ── Derived data ──
   const categories = useMemo(() => {

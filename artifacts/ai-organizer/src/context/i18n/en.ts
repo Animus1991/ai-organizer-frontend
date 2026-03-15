@@ -735,6 +735,13 @@ export const en: Record<string, string> = {
   "profile.recentActivity": "Recent Activity",
   "profile.starredDocs": "Starred Documents",
   "profile.noStarred": "No starred documents yet. Star documents from the home page.",
+  "profile.achievements": "Achievements",
+  "profile.completeness": "Profile Completeness",
+  "profile.completenessLow": "Complete your profile to increase visibility in the research community.",
+  "profile.completenessHigh": "Almost there! Fill in the remaining fields to maximise your profile.",
+  "profile.skills": "Skills & Expertise",
+  "profile.intent": "Research Intent",
+  "profile.noActivity": "No recent activity.",
   // Phase 3 — Collaboration Model
   "team.role.owner": "Owner", "team.role.admin": "Admin", "team.role.write": "Write", "team.role.read": "Read",
   "issue.title": "Research Issues", "issue.subtitle": "Track research tasks, questions, and hypotheses",
